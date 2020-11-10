@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Annonce : {{ ad.title }}{% endblock %}
+
+{% block body %}
+<div class="annonce-title" style="background-image: url({{ad.coverImage}});">
+    <div class="container">
+       <h1>{{ad.title}}</h1>
+       <p>{{ad.introduction}}</p>
+       <p class="h2"><strong>{{ad.rooms}} chambres</strong> pour <strong>{{ad.price}}</strong>€ par nuit</p>
+       <a href="#" class="btn btn-primary">Réserver</a>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 mb-3">
+            {{ad.content | raw }}
+            <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    {% for image in ad.images %}
+                        <li data-target="#carouselExampleCaptions" data-slide-to="{{ loop.index0 }}" {% if loop.first %} class="active" {% endif %}></li>    
+                    {% endfor %}
+                </ol>
+                <div class="carousel-inner">
+                    {% for image in ad.images %}
+                        <div class="carousel-item {% if loop.first %}active{% endif %}">
+                            <img src="{{ image.url }}" class="d-block w-100" alt="image de {{ ad.title }}">
+                            <div class="carousel-caption d-none d-md-block">
+                                <h5>{{ ad.title }}</h5>
+                                <p>{{ image.caption }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                  
+                  
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+
+        </div>
+        <div class="col">
+            <div class="row">
+                <div class="col-4">
+                    <img src="http://placehold.it/64x64" alt="Avatar de Bruce">
+                </div>
+                <div class="col">
+                    <h3>Bruce Wayne</h3>
+                    <span class="badge badge-primary">3 annonces</span>
+                </div>
+                <div class="col-12 mt-3">
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo veritatis cumque deserunt pariatur saepe voluptatem ullam at beatae debitis sed.</p>
+                    <p>Nemo explicabo debitis quas incidunt tenetur? Impedit error deleniti, enim nemo culpa eveniet ipsa totam? Nobis qui illum dolores dolorum!</p>
+                    <p>Sequi neque, quia consectetur voluptatibus vel consequatur tenetur nulla facere libero pariatur adipisci quibusdam doloribus reprehenderit, necessitatibus a quos eos!</p>
+                </div>
+            </div>
+        </div>
+    
+    </div>
+</div>
+{% endblock %}
