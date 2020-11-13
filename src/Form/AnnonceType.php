@@ -14,13 +14,13 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class AnnonceType extends AbstractType
 {
-    private function getConfiguration($label,$placeholder){
-        return [
+    private function getConfiguration($label,$placeholder, $options=[]){
+        return array_merge([
             'label'=>$label,
             'attr'=> [
                 'placeholder'=>$placeholder
             ]
-        ];
+            ], $options);
     }
 
 
@@ -34,7 +34,9 @@ class AnnonceType extends AbstractType
                     'placeholder'=>'titre de votre annonce'
                 ]
             ])
-            ->add('slug', TextType::class, $this->getConfiguration('Slug','Adresse web (automatique)'))
+            ->add('slug', TextType::class, $this->getConfiguration('Slug','Adresse web (automatique)',[
+                'required' => false
+            ]))
             ->add('rooms', IntegerType::class, $this->getConfiguration('Nombre de chambres','Donnez le nombre de chambres disponibles'))
             ->add('price', MoneyType::class, $this->getConfiguration('Prix par nuit','indiquer le prix que vous voulez pour une nuit'))
             ->add('introduction', TextType::class, $this->getConfiguration('Introduction','Donnez une description globale de l\'annonce'))
