@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Ad;
+use App\Entity\Image;
 use App\Form\AnnonceType;
+use App\Form\AnnonceEditType;
 use App\Repository\AdRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,9 +41,17 @@ class AdController extends AbstractController
     public function create(EntityManagerInterface $manager, Request $request)
     {
         $ad = new Ad();
+        /*
+        $image1 = new Image();
+        $image1->setUrl('http://placehold.it/400x200')
+                ->setCaption('Titre 1');
+        $ad->addImage($image1);        
 
-        //$title = $request->request->get('annonce');
-        //dump($title['title']);
+        $image2 = new Image();
+        $image2->setUrl('http://placehold.it/400x200')
+                ->setCaption('Titre 2');
+        $ad->addImage($image2); 
+        */       
 
         $form = $this->createForm(AnnonceType::class, $ad);
 
@@ -50,6 +60,12 @@ class AdController extends AbstractController
         //dump($ad);
 
         if($form->isSubmitted() && $form->isValid()){
+
+            foreach($ad->getImages() as $image){
+                $image->setAd($ad);
+                $manager->persist($image);
+            }
+
             $manager->persist($ad);
             $manager->flush();
 
@@ -70,6 +86,49 @@ class AdController extends AbstractController
         ]);
     }
 
+
+    /**
+     * Permet de modifier une annonce
+     * @Route("/ads/{slug}/edit", name="ads_edit")
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @param Ad $ad
+     * @return Response
+     */
+    public function edit(Request $request, EntityManagerInterface $manager, Ad $ad)
+    {
+        $form = $this->createForm(AnnonceEditType::class, $ad);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $ad->setSlug(''); // pour que initialize slug
+
+            foreach($ad->getImages() as $image){
+                $image->setAd($ad);
+                $manager->persist($image);
+            }
+
+            $manager->persist($ad);
+            $manager->flush();
+
+            $this->addFlash(
+                'success',
+                "L'annonce <strong>{$ad->getTitle()}</strong> a bien été modifiée"
+            );
+
+            return $this->redirectToRoute('ads_show',[
+                'slug' => $ad->getSlug()
+            ]);
+        }        
+
+
+        return $this->render("ad/edit.html.twig",[
+            "ad" => $ad,
+            "myForm" => $form->createView()
+        ]);
+
+    }
 
     /**
      * Permet d'afficher une seule annonce

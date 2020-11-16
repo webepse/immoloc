@@ -1,24 +1,24 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Création d'une annonce{% endblock %}
+{% block title %}Modification de l'annonce : {{ad.title}}{% endblock %}
 
 {% form_theme myForm _self %}
 
 {% block body %}
     <div class="container">
-        <h1>Création d'une nouvelle annonce</h1>
+        <h1>Modification de l'annonce : {{ad.title}}</h1>
         {# {{ form(myForm) }} #}
 
         {{ form_start(myForm) }}
 
             {{form_widget(myForm)}}
-                <button type="submit" class="btn btn-primary">Création d'une annonce</button>
+                <button type="submit" class="btn btn-primary">Modification de l'annonce</button>
         {{ form_end(myForm) }}
 
     </div>
 {% endblock %}
 
-{% block _annonce_images_widget %}
+{% block _annonce_edit_images_widget %}
     {# Définition du champ annonce_image, la variable form correspond au champ annonce_image #}
     <p>Ici, vous pouvez ajouter vos propres images</p>
     {{ form_widget(form) }}
@@ -28,13 +28,13 @@
     </div>
 {% endblock %}
 
-{% block _annonce_images_entry_row %}
+{% block _annonce_edit_images_entry_row %}
     {# entry précise le entry_type de notre AnnonceType au niveau de la collection - donc chaque formulaire ImageType #}
     {# permet de juste afficher le widget donc plus les 0 1 2 3 ... #}
     {{ form_widget(form) }}
 {% endblock %}
 
-{% block _annonce_images_entry_widget %}
+{% block _annonce_edit_images_entry_widget %}
      {# entry précise le entry_type de notre AnnonceType au niveau de la collection - donc chaque formulaire ImageType #}
      <div class="form-group" id="block_{{id}}">{# id est une variable du block - block_annonce_images_0 #}
         <div class="row">
@@ -68,7 +68,7 @@
             const index = +widgetCounter.value // le + permet de transformer en nombre pcq .value rend tjrs un string
             console.log(index)
 
-            const annonceImages = document.querySelector("#annonce_images")
+            const annonceImages = document.querySelector("#annonce_edit_images")
             //console.log(annonceImages.dataset.prototype)
             // récupérer le prototype des entrées data-prototype et modifer __name__ par l'index (0,1,2,3)
             const prototype = annonceImages.dataset.prototype.replace(/__name__/g, index) // drapeau/option g pour indiquer qu'on va le faire plusieurs fois
@@ -84,7 +84,7 @@
         })
 
         const updateCounter = () => {
-            const count = document.querySelectorAll('#annonce_images div.form-group').length
+            const count = document.querySelectorAll('#annonce_edit_images div.form-group').length
             //console.log(count)
             document.querySelector('#widgets-counter').value = count
         }
