@@ -21,6 +21,7 @@ class AppFixtures extends Fixture
         $this->encoder = $encoder;
     }
 
+   
     public function load(ObjectManager $manager)
     {
         $faker = Factory::create('FR-fr');
@@ -36,6 +37,8 @@ class AppFixtures extends Fixture
 
             $picture = 'https://randomuser.me/api/portraits/';
             $pictureId = $faker->numberBetween(1,99).'.jpg';
+            // https://randomuser.me/api/portraits/women/25.jpg 
+            // $picture = $picture.'women/.'25.jpg'
             $picture .= ($genre == 'male' ? 'men/' : 'women/').$pictureId;
 
             $hash = $this->encoder->encodePassword($user,'password');
@@ -53,6 +56,7 @@ class AppFixtures extends Fixture
 
         }
 
+        // gestion des annonces
         for($a = 1; $a <= 30; $a++){
             $ad = new Ad();
             $title = $faker->sentence();
