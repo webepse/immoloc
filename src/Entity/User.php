@@ -2,14 +2,16 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\UserRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @ORM\HasLifecycleCallbacks
  */
 class User implements UserInterface
 {
@@ -70,6 +72,20 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity=Ad::class, mappedBy="author")
      */
     private $ads;
+
+    /**
+     * Permet d'initialiser le slug automatiquement s'il n'est pas fourni 
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     * 
+     * @return void
+     */
+    public function initializeSlug(){
+        if(empty($this->slug)){
+            $slugify = new Slugify();
+            $this->slug = $slugify->slugify($this->firstName.' '.$this->lastName.' '.rand());
+        }
+    }
 
     public function __construct()
     {
