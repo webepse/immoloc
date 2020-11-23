@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+{% block title %}Modifier image{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>Modifier l'image de {{ app.user.email }}</h1>
+        <img src="/uploads/{{ app.user.picture }}" alt="avatar de {{app.user.email}}">
+        {{form_start(form)}}
+            {{form_widget(form)}}
+            <button type="submit" class="btn btn-success float-right">Modifier l'image</button>
+        {{form_end(form)}}
+    </div>
+{% endblock %}
