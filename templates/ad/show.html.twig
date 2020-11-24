@@ -14,7 +14,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-8 mb-3">
-            {{ad.content | raw }}
+            {{ad.content | raw | nl2br }}
             <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
                 <ol class="carousel-indicators">
                     {% for image in ad.images %}
@@ -47,18 +47,26 @@
 
         </div>
         <div class="col">
-            <div class="row">
-                <div class="col-4">
-                    <img src="http://placehold.it/64x64" alt="Avatar de Bruce">
+            {% set a = ad.author %}
+            {# exemple : ad.author.fullName devient a.fullName #}
+            <div class="row mb-3">
+                <div class="col-3">
+                    <a href="#">
+                        {% if a.picture %}
+                                <img src="/uploads/{{a.picture}}" class="avatar avatar-medium" alt="Avatar de {{a.fullName}}">
+                            {% else %}
+                                <img src="http://placehold.it/300x300" class="avatar avatar-medium" alt="Avatar de {{a.fullName}}">
+                        {% endif %}
+                    </a>
                 </div>
                 <div class="col">
-                    <h3>Bruce Wayne</h3>
-                    <span class="badge badge-primary">3 annonces</span>
+                    <a href="#">
+                        <h3>{{ a.fullName }}</h3>
+                    </a>
+                    <span class="badge badge-primary">{{ a.ads | length }} annonces</span>
                 </div>
                 <div class="col-12 mt-3">
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo veritatis cumque deserunt pariatur saepe voluptatem ullam at beatae debitis sed.</p>
-                    <p>Nemo explicabo debitis quas incidunt tenetur? Impedit error deleniti, enim nemo culpa eveniet ipsa totam? Nobis qui illum dolores dolorum!</p>
-                    <p>Sequi neque, quia consectetur voluptatibus vel consequatur tenetur nulla facere libero pariatur adipisci quibusdam doloribus reprehenderit, necessitatibus a quos eos!</p>
+                   {{ a.description | raw | nl2br }}
                 </div>
             </div>
         </div>

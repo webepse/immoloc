@@ -3,11 +3,22 @@
 
 {% block body %}
     <div class="container">
-        <h1>Modifier l'image de {{ app.user.email }}</h1>
-        <img src="/uploads/{{ app.user.picture }}" alt="avatar de {{app.user.email}}">
+        <h1>Modifier l'image de {{ app.user.fullName }}</h1>
+        <img src="/uploads/{{ app.user.picture }}" alt="avatar de {{app.user.fullName}}">
         {{form_start(form)}}
             {{form_widget(form)}}
             <button type="submit" class="btn btn-success float-right">Modifier l'image</button>
         {{form_end(form)}}
     </div>
+{% endblock %}
+{% block javascripts %}
+     <script>
+        $('.custom-file input').change(function (e) {
+            var files = [];
+            for (var i = 0; i < $(this)[0].files.length; i++) {
+                files.push($(this)[0].files[i].name);
+            }
+            $(this).next('.custom-file-label').html(files.join(', '));
+        });
+    </script>
 {% endblock %}
