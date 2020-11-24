@@ -4,15 +4,16 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\AccountType;
-use App\Entity\PasswordUpdate;
-use App\Entity\UserImgModify;
 use App\Form\ImgModifyType;
+use App\Entity\UserImgModify;
+use App\Entity\PasswordUpdate;
 use App\Form\RegistrationType;
 use App\Form\PasswordUpdateType;
 use Symfony\Component\Form\FormError;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -113,17 +114,27 @@ class AccountController extends AbstractController
     {
 
         $user = $this->getuser(); // récupérer l'utilisateur connecté 
+        $fileName = $user->getPicture();
+        if(!empty($fileName))
+        {
+            $user->setPicture(
+                new File($this->getParameter('uploads_directory').'/'.$user->getPicture())
+            );
+        }
         $form = $this->createForm(AccountType::class,$user);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid())
         {
+            $user->setSlug('')
+                ->setPicture($fileName);
             $manager->persist($user);
             $manager->flush();
             $this->addFlash(
                 'success',
                 'Les données ont été modifiée avec succés'
             );
+            return $this->redirectToRoute('account_index');
         }
 
         return $this->render("account/profile.html.twig",[
@@ -165,7 +176,7 @@ class AccountController extends AbstractController
                     'Votre mot de passe a bien été modifié'
                 );
 
-                return $this->redirectToRoute('homepage');
+                return $this->redirectToRoute('account_index');
 
             }
         }
@@ -221,7 +232,7 @@ class AccountController extends AbstractController
                 'success',
                 'Votre avatar a bien été modifié'
             );
-            return $this->redirectToRoute('homepage');
+            return $this->redirectToRoute('account_index');
 
         }
 
@@ -252,7 +263,7 @@ class AccountController extends AbstractController
             );
         }
 
-        return $this->redirectToRoute('homepage');
+        return $this->redirectToRoute('account_index');
 
     }
 

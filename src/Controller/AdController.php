@@ -65,6 +65,8 @@ class AdController extends AbstractController
                 $image->setAd($ad);
                 $manager->persist($image);
             }
+            // on ajoute l'auteur mais attention maintenant il y a un risque de bug si on n'est pas connecté (à corriger)
+            $ad->setAuthor($this->getUser());
 
             $manager->persist($ad);
             $manager->flush();
