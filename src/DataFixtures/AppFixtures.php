@@ -27,6 +27,17 @@ class AppFixtures extends Fixture
         $faker = Factory::create('FR-fr');
         //$slugify = new Slugify();
 
+        $admin = new User();
+        $admin->setFirstName('Jordan')
+            ->setLastName('Berti')
+            ->setEmail('berti@epse.be')
+            ->setPassword($this->encoder->encodePassword($admin,'password'))
+            ->setIntroduction($faker->sentence())
+            ->setDescription('<p>'.join('</p><p>', $faker->paragraphs(3)).'</p>')
+            ->setRoles(['ROLE_ADMIN']);
+        $manager->persist($admin);
+
+
         // gestion des utilisateurs 
         $users = []; // initialisation d'un tableau pour associer Ad et User
         $genres = ['male','femelle'];
@@ -88,6 +99,7 @@ class AppFixtures extends Fixture
 
 
         }
+
         $manager->flush();
     }
 }
