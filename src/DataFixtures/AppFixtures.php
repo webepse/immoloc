@@ -38,6 +38,7 @@ class AppFixtures extends Fixture
         $manager->persist($admin);
 
 
+        
         // gestion des utilisateurs 
         $users = []; // initialisation d'un tableau pour associer Ad et User
         $genres = ['male','femelle'];

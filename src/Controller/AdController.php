@@ -44,23 +44,10 @@ class AdController extends AbstractController
     public function create(EntityManagerInterface $manager, Request $request)
     {
         $ad = new Ad();
-        /*
-        $image1 = new Image();
-        $image1->setUrl('http://placehold.it/400x200')
-                ->setCaption('Titre 1');
-        $ad->addImage($image1);        
-
-        $image2 = new Image();
-        $image2->setUrl('http://placehold.it/400x200')
-                ->setCaption('Titre 2');
-        $ad->addImage($image2); 
-        */       
-
+   
         $form = $this->createForm(AnnonceType::class, $ad);
 
         $form->handleRequest($request);
-
-        //dump($ad);
 
         if($form->isSubmitted() && $form->isValid()){
 
