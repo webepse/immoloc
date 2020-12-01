@@ -4,9 +4,11 @@ namespace App\Entity;
 
 use App\Repository\BookingRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=BookingRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  */
 class Booking
 {
@@ -31,11 +33,15 @@ class Booking
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\Type("datetime")
+     * @Assert\GreaterThan("today", message="La date d'arrivée sur les lieux doit être ultérieure à la date d'aujourd'hui")
      */
     private $startDate;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\Type("datetime")
+     * @Assert\GreaterThan(propertyPath="startDate", message="La date de départ des lieux doit être plus éloignée que la date d'arrivée sur les lieux")
      */
     private $endDate;
 
@@ -53,6 +59,31 @@ class Booking
      * @ORM\Column(type="text", nullable=true)
      */
     private $comment;
+
+    /**
+     * Permet de remplir automatiquement les champs qui ne sont pas dans le formulaire de réservation
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function prePersist(){
+        if(empty($this->createdAt)){
+            $this->createdAt = new \DateTime();
+        }
+
+        if(empty($this->amount)){
+            // prix de l'annonce * nombre de jour
+            $this->amount = $this->ad->getPrice() * $this->getDuration(); 
+        }
+    }
+
+    /**
+     * Permet de récup le nombre de jour entre 2 dates
+     */
+    public function getDuration(){
+        // différence entre objet DateTime -> méthode diff() va renvoyer un objet DateInterval
+        $diff = $this->endDate->diff($this->startDate);
+        return $diff->days; // renvoie le nombre de jour d'un objet DateInterval
+    }
 
     public function getId(): ?int
     {

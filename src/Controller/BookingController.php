@@ -25,6 +25,26 @@ class BookingController extends AbstractController
 
         $form->handleRequest($request);
 
+        if($form->isSubmitted() && $form->isValid()){
+            $user = $this->getUser();
+            
+            $booking->setBooker($user)
+                ->setAd($ad);
+
+            $manager->persist($booking);
+            $manager->flush();
+            
+            $this->addFlash(
+                'success',
+                "Le formulaire est bien passé"
+            );
+
+            return $this->redirectToRoute("homepage");
+
+
+        }
+
+
         return $this->render('booking/book.html.twig', [
             'ad' => $ad,
             'myForm' => $form->createView()
