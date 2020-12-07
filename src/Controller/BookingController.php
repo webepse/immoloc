@@ -44,11 +44,8 @@ class BookingController extends AbstractController
                 $manager->persist($booking);
                 $manager->flush();
                 
-                $this->addFlash(
-                    'success',
-                    "Le formulaire est bien passé"
-                );
-                return $this->redirectToRoute("homepage");
+                // mettre un message de félicitation
+                return $this->redirectToRoute("booking_show", ['id'=> $booking->getId(), 'withAlert' => true]);
             }
 
 
@@ -63,4 +60,19 @@ class BookingController extends AbstractController
             'myForm' => $form->createView()
         ]);
     }
+
+    /**
+     * Permet d'afficher la page d'une réservation
+     * @Route("/booking/{id}", name="booking_show")
+     *
+     * @param Booking $booking
+     * @return void
+     */
+    public function show(Booking $booking)
+    {
+        return $this->render("booking/show.html.twig",[
+            'booking' => $booking
+        ]);
+    }
+
 }
