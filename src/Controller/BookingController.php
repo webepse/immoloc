@@ -31,15 +31,28 @@ class BookingController extends AbstractController
             $booking->setBooker($user)
                 ->setAd($ad);
 
-            $manager->persist($booking);
-            $manager->flush();
-            
-            $this->addFlash(
-                'success',
-                "Le formulaire est bien passé"
-            );
 
-            return $this->redirectToRoute("homepage");
+            // test si les dates ne sont pas disponible -> message d'erreur sinon enregistrement
+            if(!$booking->isBookableDates())
+            {
+                $this->addFlash(
+                    'warning',
+                    "Les dates que vous avez choisie ne peuvent être réservées: elles sont déjà prises!"
+                );
+            }
+            else{
+                $manager->persist($booking);
+                $manager->flush();
+                
+                $this->addFlash(
+                    'success',
+                    "Le formulaire est bien passé"
+                );
+                return $this->redirectToRoute("homepage");
+            }
+
+
+
 
 
         }
