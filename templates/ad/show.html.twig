@@ -81,7 +81,7 @@
                             {{comment.content | nl2br }}
                         </blockquote>
                         <strong>Note donnée: </strong>
-                        {% include 'partials/rating.html.twig' with {'rating': comment.rating, 'exemple':'test'} %}
+                        {% include 'partials/rating.html.twig' with {'rating': comment.rating} %}
                         
                     </div>
                 {% endfor %}

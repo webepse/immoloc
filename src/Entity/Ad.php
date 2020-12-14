@@ -2,11 +2,13 @@
 
 namespace App\Entity;
 
+use App\Entity\User;
+use App\Entity\Comment;
 use Cocur\Slugify\Slugify;
 use App\Repository\AdRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -125,6 +127,24 @@ class Ad
 
         return 0;
     }
+
+
+    /**
+     * Permet de récupérer le commenaitre d'un auteur par rapport à une annonce
+     *
+     * @param User $author
+     * @return Comment|null
+     */
+    public function getCommentFromAuthor(User $author)
+    {
+        foreach($this->comments as $comment)
+        {
+            if($comment->getAuthor() === $author) return $comment;
+        }
+
+        return null;
+    }
+
 
     public function getNotAvailableDays(){
         $notAvailableDays = [];

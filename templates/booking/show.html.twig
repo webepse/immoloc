@@ -59,6 +59,28 @@
                         </a>
                     </div>
                 </div>
+                <div class="alert alert-light" id="comment">
+                    <h2 class="alert-heading">Votre avis compte!</h2>
+                    {% if date() > date(booking.endDate) %}
+                        {% set commment = booking.ad.commentFromAuthor(app.user) %}
+                        {% if comment is not null %}
+                            {# déjà commenté , on ne peut pas commenter 2 fois #}
+                            <blockquote>
+                                {{comment.content}}
+                            </blockquote>
+                            <strong>Note: </strong>{% include 'partials/rating.html.twig' with {'rating': comment.rating} %}
+                        {% else %}
+                            {# formulaire pour commenter le voyage #}
+                            
+                        {% endif %}
+                    {% else %}
+                        <p>Vous ne pourrez pas noter cette annonce tant que votre voyage ne sera pas terminé</p>
+                    
+                    {% endif %}
+                
+                </div>
+
+
             </div>
             <div class="col">
                 <div class="alert alert-light">
