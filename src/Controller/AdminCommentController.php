@@ -66,7 +66,7 @@ class AdminCommentController extends AbstractController
     {
         $this->addFlash(
             'success',
-            "Le commentaire a bien été supprimé"
+            "Le commentaire n°{$comment->getId()} a bien été supprimé"
         );
         $manager->remove($comment);
         $manager->flush();

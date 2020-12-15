@@ -22,7 +22,7 @@
                     <tr>
                         <td>{{comment.id}}</td>
                         <td>{{comment.createdAt | date('d/m/Y H:i')}}</td>
-                        <td><img src="{{comment.author.picture}}" class="avatar avatar-micro"> {{comment.author.fullName}}</td>
+                        <td>{{comment.author.fullName}}</td>
                         <td class="text-justify">{{comment.content | raw | nl2br }}</td>
                         <td class="text-center">
                             <span class="badge badge-dark">{{comment.rating}}</span>
