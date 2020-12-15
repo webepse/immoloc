@@ -55,4 +55,33 @@ class AdminAdController extends AbstractController
             'myForm' => $form->createView()
         ]);
     }
+
+    /**
+     * Permet de supprimer une annonce
+     * @Route("/admin/ads/{id}/delete", name="admin_ads_delete")
+     *
+     * @param Ad $ad
+     * @param EntityManagerInterface $manager
+     * @return Response
+     */
+    public function delete(Ad $ad, EntityManagerInterface $manager){
+        // one ne peut pas supprimer une annonce qui possède des réservations
+        if(count($ad->getBookings()) > 0){
+            $this->addFlash(
+                "warning",
+                "Vous ne pouvez pas supprimer l'annonce <strong>{$ad->getTitle()}</strong> car elle possède déjà des réservations"
+            );
+        }else{
+            $this->addFlash(
+                'success',
+                "L'annonce <strong>{$ad->getTitle()}</strong> a bien été supprimée"
+            );
+            $manager->remove($ad);
+            $manager->flush();
+
+        }
+
+        return $this->redirectToRoute('admin_ads_index');
+
+    }
 }
