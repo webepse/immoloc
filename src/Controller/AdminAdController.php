@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Ad;
 use App\Form\AnnonceType;
 use App\Repository\AdRepository;
+use App\Service\PaginationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,36 +18,21 @@ class AdminAdController extends AbstractController
      * Permet d'afficher l'ensemble des annonces 
      * @Route("/admin/ads/{page<\d+>?1}", name="admin_ads_index")
      */
-    public function index(AdRepository $repo, $page): Response
+    public function index($page, PaginationService $pagination): Response
     {
-        //@Route("/admin/ads/{page}", name="admin_ads_index", requirements={"page": "\d+"})
-        // Méthode find: permet de retrouver un enregistrement par son identifiant
-        // $ad = $repo->find(531);
-
-        // $ad = $repo->findOneBy([
-        //    'title' => "mon annonce"
-        // ]);
-
-        /* findBy permet de récupèrer plusieurs éléments (différent de findOneBy) - elle a 4 arguments possible 
-            1- critère
-            2- ordre
-            3- limit
-            4- offset (début)
-            $ads = $repo->findBy([],[], 1, 0);
-        */
-        $limit = 10; // limite de 10 par page
-        
-        $start = $page * $limit - $limit;
-        // page 1 * 10 = 10 - 10 = 0
-        // page 2 * 10 = 20 - 10 = 10
-
-        $total = count($repo->findAll());
-        $pages = ceil($total / $limit ); // arrondi au dessus 3.4 => 4
-
+       
+       $pagination->setEntityClass(Ad::class)
+                ->setPage($page)
+                ->setLimit(10);
+        /*
         return $this->render('admin/ad/index.html.twig', [
-            'ads' => $repo->findBy([],[], $limit, $start),
-            'pages' => $pages,
+            'ads' => $pagination->getData(),
+            'pages' => $pagination->getPages(),
             'page' => $page
+        ]);
+        */
+        return $this->render('admin/ad/index.html.twig', [
+           'pagination' => $pagination
         ]);
     }
 
